@@ -11,3 +11,6 @@
 ### View report:
 
 ```build/reports/tests/test/index.html```
+
+https://github.com/otus-qa-kotlin/SeaBattle3D  
+https://github.com/sopcastultras/SeaBattle3D

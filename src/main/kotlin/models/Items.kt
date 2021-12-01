@@ -6,7 +6,7 @@ interface Action {
 
 abstract class Item(
     open val size: Int,
-    private var direction: Direction? = null,
+    open val direction: Direction,
     private var found: Boolean = false
 ) : Action {
     override fun touch() {
@@ -14,14 +14,27 @@ abstract class Item(
     }
 }
 
-abstract class Ship(size: Int) : Item(size)
+abstract class Ship(
+    size: Int,
+    direction: Direction
+) : Item(size, direction)
 
-data class HelpItem(override val size: Int = 1) : Item(size)
+data class HelpItem(
+    override val size: Int = 1,
+    override val direction: Direction
+) : Item(size, direction)
 
-data class BombItem(override val size: Int = 1) : Item(size)
+data class BombItem(
+    override val size: Int = 1,
+    override val direction: Direction
+) : Item(size, direction)
 
-data class SmallShip(override val size: Int = 1) : Ship(size)
+data class StaticShip(
+    override val size: Int = 1,
+    override val direction: Direction
+) : Item(size, direction)
 
-data class MediumShip(override val size: Int = 2) : Ship(size)
-
-data class LargeShip(override val size: Int = 4) : Ship(size)
+data class DynamicShip(
+    override val size: Int = 1,
+    override val direction: Direction
+) : Item(size, direction)
