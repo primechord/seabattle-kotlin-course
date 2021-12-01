@@ -32,9 +32,9 @@ data class BombItem(
 data class StaticShip(
     override val size: Int = 1,
     override val direction: Direction
-) : Item(size, direction)
+) : Ship(size, direction)
 
 data class DynamicShip(
     override val size: Int = 1,
     override val direction: Direction
-) : Item(size, direction)
+) : Ship(size, direction)

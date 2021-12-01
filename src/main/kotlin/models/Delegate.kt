@@ -14,7 +14,7 @@ interface Spawner {
 }
 
 class BattleFieldDelegate(private val items: MutableList<Item>) : Spawner {
-    lateinit var bf: BattleField
+    private lateinit var bf: BattleField
 
     /* FIXME
         Иногда рядом объекты,
