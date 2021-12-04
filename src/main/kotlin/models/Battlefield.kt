@@ -1,7 +1,12 @@
 package models
 
+import DatabaseWrapper
 import FIELD_SIZE
+import IS_NEW_GAME
+import entity.Cube
+import entity.Cubes
 import io.qameta.allure.Step
+import org.jetbrains.exposed.sql.SchemaUtils
 
 interface Field {
     operator fun get(x: Int, y: Int, z: Int): CubeState
@@ -23,6 +28,18 @@ class BattleField(private val fieldSize: Int = FIELD_SIZE) : Field {
     override operator fun set(x: Int, y: Int, z: Int, cubeState: CubeState) {
         if (checkBoundaries(Point(x, y, z)) && isAvailablePoint(Point(x, y, z))) {
             field[calculatePosition(Point(x, y, z))] = cubeState
+
+            if (IS_NEW_GAME) {
+                DatabaseWrapper.wrap {
+                    SchemaUtils.create(Cubes)
+                    Cube.new {
+                        this.x = x
+                        this.y = y
+                        this.z = z
+                        this.cubeState = cubeState
+                    }
+                }
+            }
         } else throw IllegalArgumentException("set incorrect position: $x,$y,$z")
     }
 

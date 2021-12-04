@@ -1,6 +1,9 @@
 package models
 
+import DatabaseWrapper
 import FIELD_SIZE
+import IS_NEW_GAME
+import entity.Cube
 import generateRandomPosition
 import kotlin.reflect.KProperty
 
@@ -47,7 +50,7 @@ class BattleFieldDelegate(private val items: List<Item>) {
             }
         }
 
-        println("$item placed $result")
+        // println("$item placed $result")
     }
 
     fun canCreateShip(ship: Item): Boolean {
@@ -69,7 +72,7 @@ class BattleFieldDelegate(private val items: List<Item>) {
             if (bf.isAvailableCube(point)) {
                 bf[point.x, point.y, point.z] = CubeState.BOMB
                 current++
-                println("BombItem placed $point")
+                // println("BombItem placed $point")
             }
         }
     }
@@ -82,7 +85,17 @@ class BattleFieldDelegate(private val items: List<Item>) {
             if (bf.isAvailableCube(point)) {
                 bf[point.x, point.y, point.z] = CubeState.HELP
                 current++
-                println("HelpItem placed $point")
+                // println("HelpItem placed $point")
+            }
+        }
+    }
+
+    private fun loadFromDatabaseIfNeed() {
+        if (!IS_NEW_GAME) {
+            DatabaseWrapper.wrap {
+                Cube.all().forEach {
+                    bf[it.x, it.y, it.z] = it.cubeState
+                }
             }
         }
     }
@@ -93,6 +106,8 @@ class BattleFieldDelegate(private val items: List<Item>) {
         createBombItems()
         createHelpItems()
         createStaticShips()
+
+        loadFromDatabaseIfNeed()
 
         return bf
     }

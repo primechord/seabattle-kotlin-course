@@ -51,6 +51,7 @@ fun BattleField.printToConsole() {
 private fun printSymbol(x: Int, y: Int, z: Int, symbol: String) = print(" $symbol ")
 
 private fun printHeader(z: Int) {
+    var layer = z
     println()
-    println("Слой №$z")
+    println("Слой №${++layer}")
 }
