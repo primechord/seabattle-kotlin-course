@@ -1,25 +1,45 @@
+group = "org.sopcastultras.seabattle3d"
+version = "1.0-SNAPSHOT"
+
+val kotestVersion = "5.0.1"
+
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.5.32"
+    id("io.qameta.allure") version "2.9.6"
+    id("jacoco")
+    application
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+allure {
+    adapter {
+        autoconfigure.set(true)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
-val kotlinVersion = "1.5.31"
-val spekVersion = "2.0.17"
-
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("com.googlecode.lanterna:lanterna:3.1.1")
+    implementation("io.qameta.allure:allure-java-commons:2.17.0")
 
-    testImplementation("org.assertj:assertj-core:3.21.0")
-    testImplementation("io.kotest:kotest-runner-junit5:5.0.0.RC")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-extensions-allure:4.4.3")
+    testImplementation("org.slf4j:slf4j-simple:1.7.32")
+}
+
+application {
+    mainClass.set("MainKt")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    ignoreFailures = true
+    finalizedBy(tasks.allureReport, tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
 }

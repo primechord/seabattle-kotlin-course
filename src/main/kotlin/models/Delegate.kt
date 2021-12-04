@@ -1,19 +1,10 @@
 package models
 
-import COUNT_OF_BOMB_ITEM
-import COUNT_OF_HELP_ITEM
-import COUNT_OF_LARGE
-import COUNT_OF_MEDIUM
-import COUNT_OF_SMALL
 import FIELD_SIZE
-import kotlin.random.Random
+import generateRandomPosition
 import kotlin.reflect.KProperty
 
-interface Spawner {
-    fun spawnInRandomPlace(item: Item): List<Point>
-}
-
-class BattleFieldDelegate(private val items: MutableList<Item>) : Spawner {
+class BattleFieldDelegate(private val items: List<Item>) {
     private lateinit var bf: BattleField
 
     /* FIXME
@@ -22,7 +13,7 @@ class BattleFieldDelegate(private val items: MutableList<Item>) : Spawner {
         иногда не создаются объекты,
         последний слой не используется */
     @Deprecated("Здесь много ошибок", level = DeprecationLevel.WARNING)
-    override fun spawnInRandomPlace(item: Item): List<Point> {
+    fun spawnInRandomPlace(item: Item) {
         val result = mutableListOf<Point>()
 
         val sizeUntil = FIELD_SIZE - 1
@@ -54,60 +45,44 @@ class BattleFieldDelegate(private val items: MutableList<Item>) : Spawner {
                 is HelpItem -> bf[p.x, p.y, p.z] = CubeState.HELP
                 is BombItem -> bf[p.x, p.y, p.z] = CubeState.BOMB
             }
-            items.add(item)
         }
 
-        println("Предмет $item создан $result")
-        return result
+        println("$item placed $result")
     }
 
-    private fun spawnNTimes(n: Int, item: Item): List<List<Point>> {
-        return List(n) {
-            spawnInRandomPlace(item)
+    fun canCreateShip(ship: Item): Boolean {
+        return TODO()
+    }
+
+    private fun createStaticShips() {
+        items.filterIsInstance<StaticShip>().forEach {
+            val ship = it.copy(head = generateRandomPosition())
+            spawnInRandomPlace(ship)
         }
-    }
-
-    private fun createSmallStaticShips(): List<List<Point>> {
-        val direction = Direction.values()[Random.nextInt(Direction.values().size)]
-        return spawnNTimes(COUNT_OF_SMALL, StaticShip(1, direction))
-    }
-
-    private fun createMediumStaticShips(): List<List<Point>> {
-        val direction = Direction.values()[Random.nextInt(Direction.values().size)]
-        return spawnNTimes(COUNT_OF_MEDIUM, StaticShip(2, direction))
-    }
-
-    private fun createLargeStaticShips(): List<List<Point>> {
-        val direction = Direction.values()[Random.nextInt(Direction.values().size)]
-        return spawnNTimes(COUNT_OF_LARGE, StaticShip(4, direction)) // FIXME дубликаты
     }
 
     private fun createBombItems() {
-        var count = 0
-        while (count < COUNT_OF_BOMB_ITEM) {
+        val bombItems = items.filterIsInstance<BombItem>()
+        var current = 0
+        while (current < bombItems.size) {
             val point = generateRandomPosition()
-            val direction = Direction.values()[Random.nextInt(Direction.values().size)]
             if (bf.isAvailableCube(point)) {
-                items.add(BombItem(1, direction))
                 bf[point.x, point.y, point.z] = CubeState.BOMB
-                count++
-
-                println("Предмет создан в точке $point")
+                current++
+                println("BombItem placed $point")
             }
         }
     }
 
     private fun createHelpItems() {
-        var count = 0
-        while (count < COUNT_OF_HELP_ITEM) {
+        val helpItems = items.filterIsInstance<HelpItem>()
+        var current = 0
+        while (current < helpItems.size) {
             val point = generateRandomPosition()
-            val direction = Direction.values()[Random.nextInt(Direction.values().size)]
             if (bf.isAvailableCube(point)) {
-                items.add(HelpItem(1, direction))
                 bf[point.x, point.y, point.z] = CubeState.HELP
-                count++
-
-                println("Предмет создан в точке $point")
+                current++
+                println("HelpItem placed $point")
             }
         }
     }
@@ -117,19 +92,9 @@ class BattleFieldDelegate(private val items: MutableList<Item>) : Spawner {
 
         createBombItems()
         createHelpItems()
+        createStaticShips()
 
-        createLargeStaticShips()
-        createMediumStaticShips()
-        createSmallStaticShips()
-
-        println(items)
         return bf
     }
 
-    private fun generateRandomPosition(sizeUntil: Int = FIELD_SIZE): Point {
-        val x = Random.nextInt(0, sizeUntil)
-        val y = Random.nextInt(0, sizeUntil)
-        val z = Random.nextInt(0, sizeUntil)
-        return Point(x, y, z)
-    }
 }

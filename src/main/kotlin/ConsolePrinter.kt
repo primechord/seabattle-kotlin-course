@@ -12,7 +12,7 @@ fun BattleField.printToWindow() {
             val line = StringBuilder()
             repeat(size) { x ->
                 when (this[x, y, z]) {
-                    CubeState.UNKNOWN -> line.appendFormatted(x, y, z, "▪")
+                    CubeState.UNKNOWN -> line.appendFormatted(x, y, z, "-")
                     CubeState.SMALL -> line.appendFormatted(x, y, z, "S")
                     CubeState.MEDIUM -> line.appendFormatted(x, y, z, "M")
                     CubeState.LARGE -> line.appendFormatted(x, y, z, "L")
@@ -34,12 +34,12 @@ fun BattleField.printToConsole() {
         repeat(size) { y ->
             repeat(size) { x ->
                 when (this[x, y, z]) {
-                    CubeState.UNKNOWN -> printSymbol(x, y, z, "▪")
+                    CubeState.UNKNOWN -> printSymbol(x, y, z, "-")
                     CubeState.SMALL -> printSymbol(x, y, z, "S")
                     CubeState.MEDIUM -> printSymbol(x, y, z, "M")
                     CubeState.LARGE -> printSymbol(x, y, z, "L")
-                    CubeState.BOMB -> printSymbol(x, y, z, "\uD83D\uDCA3")
-                    CubeState.HELP -> printSymbol(x, y, z, "\uD83D\uDC8A")
+                    CubeState.BOMB -> printSymbol(x, y, z, "B")
+                    CubeState.HELP -> printSymbol(x, y, z, "H")
                     CubeState.HIT -> printSymbol(x, y, z, "x")
                 }
             }
@@ -48,7 +48,7 @@ fun BattleField.printToConsole() {
     }
 }
 
-private fun printSymbol(x: Int, y: Int, z: Int, symbol: String) = print(symbol)
+private fun printSymbol(x: Int, y: Int, z: Int, symbol: String) = print(" $symbol ")
 
 private fun printHeader(z: Int) {
     println()

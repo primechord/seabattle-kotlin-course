@@ -16,5 +16,6 @@ enum class Direction(move: Point) {
     BACK(Point(0, -1, 0)),
     FORWARD(Point(0, 1, 0)),
     DOWN(Point(0, 0, -1)),
-    UP(Point(0, 0, 1))
+    UP(Point(0, 0, 1)),
+    UNKNOWN(Point(Int.MIN_VALUE, Int.MIN_VALUE, Int.MIN_VALUE))
 }
