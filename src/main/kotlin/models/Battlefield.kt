@@ -5,7 +5,7 @@ import FIELD_SIZE
 import IS_NEW_GAME
 import entity.Cube
 import entity.Cubes
-import io.qameta.allure.Step
+// import io.qameta.allure.Step
 import org.jetbrains.exposed.sql.SchemaUtils
 
 interface Field {
@@ -15,7 +15,7 @@ interface Field {
     fun getNeighbors(p: Point): MutableList<Point>
 }
 
-class BattleField(private val fieldSize: Int = FIELD_SIZE) : Field {
+open class BattleField(private val fieldSize: Int = FIELD_SIZE) : Field {
     private val field = Array(fieldSize * fieldSize * fieldSize) { CubeState.UNKNOWN }
 
     override operator fun get(x: Int, y: Int, z: Int): CubeState {
@@ -24,7 +24,7 @@ class BattleField(private val fieldSize: Int = FIELD_SIZE) : Field {
         } else throw IllegalArgumentException("get incorrect position: $x,$y,$z")
     }
 
-    @Step("Устанавливаем значения {x}-{y}-{z}")
+    // @Step("Устанавливаем значения {x}-{y}-{z}")
     override operator fun set(x: Int, y: Int, z: Int, cubeState: CubeState) {
         if (checkBoundaries(Point(x, y, z)) && isAvailablePoint(Point(x, y, z))) {
             field[calculatePosition(Point(x, y, z))] = cubeState
@@ -76,7 +76,7 @@ class BattleField(private val fieldSize: Int = FIELD_SIZE) : Field {
 
     fun isAvailablePoint(p: Point): Boolean = get(p.x, p.y, p.z) == CubeState.UNKNOWN
 
-    @Step("Проверяем доступность ячейки {p}")
+    // @Step("Проверяем доступность ячейки {p}")
     fun isAvailableCube(p: Point): Boolean {
         return try {
             val neighbors = getNeighbors(Point(p.x, p.y, p.z))

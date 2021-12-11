@@ -53,5 +53,5 @@ private fun printSymbol(x: Int, y: Int, z: Int, symbol: String) = print(" $symbo
 private fun printHeader(z: Int) {
     var layer = z
     println()
-    println("Слой №${++layer}")
+    println("Layer N${++layer}")
 }

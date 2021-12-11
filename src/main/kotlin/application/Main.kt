@@ -1,8 +1,28 @@
+package application
+
+import COUNT_OF_BOMB_ITEM
+import COUNT_OF_HELP_ITEM
+import COUNT_OF_LARGE
+import COUNT_OF_MEDIUM
+import COUNT_OF_SMALL
+import DatabaseWrapper
+import IS_NEW_GAME
+import backupUserdata
+import createDirectory
 import entity.Cubes
 import models.*
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import printToConsole
+import restoreUserdata
 
-fun main() {
+@SpringBootApplication
+open class Application
+
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
+
     createDirectory()
     try {
         val items = mutableListOf<Item>()

@@ -5,9 +5,11 @@ import FIELD_SIZE
 import IS_NEW_GAME
 import entity.Cube
 import generateRandomPosition
+import org.springframework.stereotype.Service
 import kotlin.reflect.KProperty
 
-class BattleFieldDelegate(private val items: List<Item>) {
+@Service
+class BattleFieldDelegate(private val items: List<Item>): Loader {
     private lateinit var bf: BattleField
 
     /* FIXME
@@ -90,7 +92,7 @@ class BattleFieldDelegate(private val items: List<Item>) {
         }
     }
 
-    private fun loadFromDatabaseIfNeed() {
+    override fun loadFromDatabaseIfNeed() {
         if (!IS_NEW_GAME) {
             DatabaseWrapper.wrap {
                 Cube.all().forEach {
@@ -112,4 +114,8 @@ class BattleFieldDelegate(private val items: List<Item>) {
         return bf
     }
 
+}
+
+interface Loader {
+    fun loadFromDatabaseIfNeed()
 }
