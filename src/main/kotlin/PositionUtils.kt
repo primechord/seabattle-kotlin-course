@@ -9,14 +9,15 @@ fun generateRandomPosition(sizeUntil: Int = FIELD_SIZE): Point {
     return Point(x, y, z)
 }
 
-fun nextPosition(point: Point, direction: Direction): Point {
+fun nextPosition(point: Point, direction: Direction): Point? {
+    val (x, y, z) = point
     return when (direction) {
-        Direction.UP -> TODO() // доделать
-        Direction.DOWN -> point
-        Direction.LEFT -> point
-        Direction.RIGHT -> point
-        Direction.FORWARD -> point
-        Direction.BACK -> point
+        Direction.LEFT -> if (x > 0) Point(x - 1, y, z) else null
+        Direction.RIGHT -> if (x < FIELD_SIZE - 1) Point(x + 1, y, z) else null
+        Direction.BACK -> if (y > 0) Point(x, y - 1, z) else null
+        Direction.FORWARD -> if (y < FIELD_SIZE - 1) Point(x, y + 1, z) else null
+        Direction.UP -> if (z > 0) Point(x, y, z - 1) else null
+        Direction.DOWN -> if (z < FIELD_SIZE - 1) Point(x, y, z + 1) else null
         Direction.UNKNOWN -> throw IllegalArgumentException("Не ждали такого")
     }
 }

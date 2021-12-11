@@ -1,10 +1,11 @@
 package models
 
 import DatabaseWrapper
-import FIELD_SIZE
 import IS_NEW_GAME
 import entity.Cube
 import generateRandomPosition
+import nextPosition
+import kotlin.random.Random
 import kotlin.reflect.KProperty
 
 class BattleFieldDelegate(private val items: List<Item>) {
@@ -12,55 +13,55 @@ class BattleFieldDelegate(private val items: List<Item>) {
 
     /* FIXME
         Иногда рядом объекты,
-        иногда падает,
         иногда не создаются объекты,
         последний слой не используется */
-    @Deprecated("Здесь много ошибок", level = DeprecationLevel.WARNING)
-    fun spawnInRandomPlace(item: Item) {
-        val result = mutableListOf<Point>()
 
-        val sizeUntil = FIELD_SIZE - 1
-        while (result.size < item.size) {
-            val point = generateRandomPosition(sizeUntil)
-            while (bf.isAvailableCube(point)) {
-                result.add(point)
-                break
-            }
+    private fun createStaticShips() {
+        items.filterIsInstance<StaticShip>().forEach {
+            while (true) {
+                val ship = it.copy(
+                    head = generateRandomPosition(),
+                    direction = Direction.values()[Random.nextInt(Direction.values().size - 1)])
 
-            for (i in (point.x + 1)..(point.x + item.size)) {
-                if (bf.isAvailablePoint(point) && (point.x + item.size) <= FIELD_SIZE) {
-                    result.add(Point(i, point.y, point.z))
-                } else {
-                    result.clear()
+                if (canPlaceShip(ship)) {
+                    placeShip(ship)
                     break
                 }
             }
         }
+    }
 
-        result.removeLast()
-        result.forEach { p ->
-            when (item) {
-                is StaticShip -> when (item.size) {
-                    1 -> bf[p.x, p.y, p.z] = CubeState.SMALL
-                    2 -> bf[p.x, p.y, p.z] = CubeState.MEDIUM
-                    4 -> bf[p.x, p.y, p.z] = CubeState.LARGE
-                }
-                is HelpItem -> bf[p.x, p.y, p.z] = CubeState.HELP
-                is BombItem -> bf[p.x, p.y, p.z] = CubeState.BOMB
-            }
+    private fun canPlaceShip(ship: StaticShip): Boolean {
+        var currentX = ship.head.x
+        var currentY = ship.head.y
+        var currentZ = ship.head.z
+        for (i in 1..ship.size) {
+            if (!bf.isAvailableCube(Point(currentX, currentY, currentZ))) return false
+            val next = nextPosition(Point(currentX, currentY, currentZ), ship.direction) ?: return false
+            currentX = next.x
+            currentY = next.y
+            currentZ = next.z
         }
-
-        // println("$item placed $result")
+        return true
     }
 
-    fun canCreateShip(ship: Item): Boolean {
-        return TODO()
-    }
-
-    private fun createStaticShips() {
-        items.filterIsInstance<StaticShip>().forEach {
-            val ship = it.copy(head = generateRandomPosition())
-            spawnInRandomPlace(ship)
+    private fun placeShip(ship: StaticShip) {
+        var currentX = ship.head.x
+        var currentY = ship.head.y
+        var currentZ = ship.head.z
+        for (i in 1..ship.size) {
+            bf[currentX, currentY, currentZ] = when (ship.size) {
+                1 -> CubeState.SMALL
+                2 -> CubeState.MEDIUM
+                4 -> CubeState.LARGE
+                else -> CubeState.UNKNOWN
+            }
+            val next = nextPosition(Point(currentX, currentY, currentZ), ship.direction)
+            next?.let {
+                currentX = next.x
+                currentY = next.y
+                currentZ = next.z
+            }
         }
     }
 
@@ -72,7 +73,6 @@ class BattleFieldDelegate(private val items: List<Item>) {
             if (bf.isAvailableCube(point)) {
                 bf[point.x, point.y, point.z] = CubeState.BOMB
                 current++
-                // println("BombItem placed $point")
             }
         }
     }
@@ -85,7 +85,6 @@ class BattleFieldDelegate(private val items: List<Item>) {
             if (bf.isAvailableCube(point)) {
                 bf[point.x, point.y, point.z] = CubeState.HELP
                 current++
-                // println("HelpItem placed $point")
             }
         }
     }
