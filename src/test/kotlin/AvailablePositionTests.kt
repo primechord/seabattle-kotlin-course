@@ -1,9 +1,8 @@
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.shouldBe
 import models.BattleField
 import models.CubeState
 import models.Point
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 
 object AvailablePositionTests : FreeSpec({
     "check busyness" - {
@@ -11,8 +10,9 @@ object AvailablePositionTests : FreeSpec({
 
         battleField[1, 1, 1] = CubeState.BOMB
         val available = battleField.isAvailableCube(Point(1, 1, 1))
-        "should return isFalse" {
-            assertThat(available).isFalse
+
+        "should return False" {
+            available shouldBe false
         }
     }
 
@@ -20,18 +20,17 @@ object AvailablePositionTests : FreeSpec({
         val battleField = BattleField()
 
         val available = battleField.isAvailableCube(Point(1, 1, 1))
-        "should return isTrue" {
-            assertThat(available).isTrue()
+
+        "should return True" {
+            available shouldBe true
         }
     }
 
     "check boundaries" - {
         val battleField = BattleField(1)
 
-        "should throw exception" {
-            assertThatIllegalArgumentException().isThrownBy {
-                battleField.isAvailableCube(Point(2, 2, 2))
-            }
+        "should return False" {
+            battleField.isAvailableCube(Point(2, 2, 2)) shouldBe false
         }
     }
 
@@ -40,8 +39,9 @@ object AvailablePositionTests : FreeSpec({
 
         battleField[1, 1, 1] = CubeState.BOMB
         val available = battleField.isAvailableCube(Point(1, 1, 2))
-        "should return isFalse" {
-            assertThat(available).isFalse()
+
+        "should return False" {
+            available shouldBe false
         }
     }
 })

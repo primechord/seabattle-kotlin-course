@@ -1,3 +1,5 @@
 /.gradle/
+/.allure/
 /.idea
 /build/
+/userdata/*

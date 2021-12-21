@@ -1,26 +1,27 @@
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.shouldBe
 import models.BattleField
 import models.BattleFieldDelegate
+import models.BombItem
 import models.Item
-import org.assertj.core.api.Assertions.assertThat
 
 object SpawnItemTests : FreeSpec({
+    /** Реализовать простой тест для количества заполненных ячеек */
     "check spawn" - {
         val items = mutableListOf<Item>()
+        items.add(BombItem())
         val battleField by BattleFieldDelegate(items)
 
-        // battleField.spawnInRandomPlace(BombItem()) FIXME починить
-
-        "bomb is created" {
-            assertThat(battleField.getFieldState().size).isEqualTo(1)
+        "item is created" {
+            battleField.getFieldState().size shouldBe 1
         }
     }
 
     "check no spawn" - {
         val battleField = BattleField()
 
-        "bomb is created" {
-            assertThat(battleField.getFieldState().size).isEqualTo(0)
+        "item is not created" {
+            battleField.getFieldState().size shouldBe 0
         }
     }
 })

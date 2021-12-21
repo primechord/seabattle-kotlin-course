@@ -4,13 +4,19 @@
 
 * JDK 8
 
+### Run application:
+
+```.\gradlew clean run```
+
 ### Run tests:
 
-```gradle clean test```
+```.\gradlew clean test```
 
-### View report:
+### View reports:
 
-```build/reports/tests/test/index.html```
+Default ```build/reports/tests/test/index.html```  
+Allure ```build/reports/allure-report/allureReport/index.html```   
+Jacoco ```build/reports/jacoco/test/html/index.html```  
 
-https://github.com/otus-qa-kotlin/SeaBattle3D  
-https://github.com/sopcastultras/SeaBattle3D
+> Otus https://github.com/otus-qa-kotlin/SeaBattle3D  
+> Me https://github.com/sopcastultras/SeaBattle3D
