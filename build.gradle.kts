@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 group = "org.sopcastultras.seabattle3d"
 version = "1.0-SNAPSHOT"
 
@@ -8,6 +10,7 @@ plugins {
     kotlin("jvm") version "1.5.32"
     id("io.qameta.allure") version "2.9.6"
     id("jacoco")
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
     application
 }
 
@@ -34,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 }
 
 application {
@@ -48,4 +52,15 @@ tasks.withType<Test> {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        sarif.required.set(true)
+    }
 }

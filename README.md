@@ -10,13 +10,16 @@
 
 ### Run tests:
 
-```.\gradlew clean test```
+```.\gradlew clean test```  
+
+### Run detekt:
+
+```.\gradlew clean detekt```
 
 ### View reports:
 
 Default ```build/reports/tests/test/index.html```  
 Allure ```build/reports/allure-report/allureReport/index.html```   
 Jacoco ```build/reports/jacoco/test/html/index.html```  
-
-> Otus https://github.com/otus-qa-kotlin/SeaBattle3D  
-> Me https://github.com/sopcastultras/SeaBattle3D
+Pipeline ```build/reports/detekt/detekt.html```  
+Horusec ```pipeline```  
