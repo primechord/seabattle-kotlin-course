@@ -1,5 +1,8 @@
 import entity.Cubes
-import models.*
+import models.BombItem
+import models.HelpItem
+import models.Item
+import models.StaticShip
 import org.jetbrains.exposed.sql.SchemaUtils
 
 fun main() {
@@ -16,7 +19,7 @@ fun main() {
             restoreUserdata()
         }
 
-        val battleField by BattleFieldDelegate(items)
+        val battleField by Delegate(items)
         battleField.printToConsole()
 
         backupUserdata()

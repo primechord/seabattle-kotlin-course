@@ -1,16 +1,15 @@
 import com.googlecode.lanterna.TerminalSize
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
-import models.BattleField
 import models.CubeState
 
-private const val size = FIELD_SIZE
+private const val SIZE = FIELD_SIZE
 
 fun BattleField.printToWindow() {
     val terminal = DefaultTerminalFactory().setInitialTerminalSize(TerminalSize(120, 70)).createTerminal()
-    for ((z, layer) in (1..size * size step size).withIndex()) {
-        repeat(size) { y ->
+    for ((z, layer) in (1..SIZE * SIZE step SIZE).withIndex()) {
+        repeat(SIZE) { y ->
             val line = StringBuilder()
-            repeat(size) { x ->
+            repeat(SIZE) { x ->
                 when (this[x, y, z]) {
                     CubeState.UNKNOWN -> line.appendFormatted(x, y, z, "-")
                     CubeState.SMALL -> line.appendFormatted(x, y, z, "S")
@@ -29,10 +28,10 @@ fun BattleField.printToWindow() {
 private fun StringBuilder.appendFormatted(x: Int, y: Int, z: Int, symbol: String) = this.append(" $symbol ")
 
 fun BattleField.printToConsole() {
-    repeat(size) { z ->
+    repeat(SIZE) { z ->
         printHeader(z)
-        repeat(size) { y ->
-            repeat(size) { x ->
+        repeat(SIZE) { y ->
+            repeat(SIZE) { x ->
                 when (this[x, y, z]) {
                     CubeState.UNKNOWN -> printSymbol(x, y, z, "-")
                     CubeState.SMALL -> printSymbol(x, y, z, "S")

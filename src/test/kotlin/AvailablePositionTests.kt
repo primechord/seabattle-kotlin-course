@@ -1,11 +1,10 @@
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import models.BattleField
 import models.CubeState
 import models.Point
 
 object AvailablePositionTests : FreeSpec({
-    "check busyness" - {
+    "busyness" - {
         val battleField = BattleField()
 
         battleField[1, 1, 1] = CubeState.BOMB
@@ -16,7 +15,7 @@ object AvailablePositionTests : FreeSpec({
         }
     }
 
-    "check availability" - {
+    "availability" - {
         val battleField = BattleField()
 
         val available = battleField.isAvailableCube(Point(1, 1, 1))
@@ -26,7 +25,7 @@ object AvailablePositionTests : FreeSpec({
         }
     }
 
-    "check boundaries" - {
+    "boundaries" - {
         val battleField = BattleField(1)
 
         "should return False" {
@@ -34,7 +33,7 @@ object AvailablePositionTests : FreeSpec({
         }
     }
 
-    "check neighbors" - {
+    "neighbors" - {
         val battleField = BattleField()
 
         battleField[1, 1, 1] = CubeState.BOMB

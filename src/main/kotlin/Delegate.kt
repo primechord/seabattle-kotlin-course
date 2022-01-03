@@ -1,20 +1,12 @@
-package models
-
-import DatabaseWrapper
-import IS_NEW_GAME
 import entity.Cube
-import generateRandomPosition
-import nextPosition
+import models.*
 import kotlin.random.Random
 import kotlin.reflect.KProperty
 
-class BattleFieldDelegate(private val items: List<Item>) {
+class Delegate(private val items: List<Item>) {
     private lateinit var bf: BattleField
 
-    /* FIXME
-        Иногда рядом объекты,
-        иногда не создаются объекты,
-        последний слой не используется */
+    /* FIXME Иногда рядом объекты, иногда не создаются объекты, последний слой не используется */
 
     private fun createStaticShips() {
         items.filterIsInstance<StaticShip>().forEach {
@@ -110,5 +102,4 @@ class BattleFieldDelegate(private val items: List<Item>) {
 
         return bf
     }
-
 }

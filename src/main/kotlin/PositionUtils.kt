@@ -18,6 +18,6 @@ fun nextPosition(point: Point, direction: Direction): Point? {
         Direction.FORWARD -> if (y < FIELD_SIZE - 1) Point(x, y + 1, z) else null
         Direction.UP -> if (z > 0) Point(x, y, z - 1) else null
         Direction.DOWN -> if (z < FIELD_SIZE - 1) Point(x, y, z + 1) else null
-        Direction.UNKNOWN -> throw IllegalArgumentException("Не ждали такого")
+        Direction.UNKNOWN -> throw IllegalArgumentException("Unexpected")
     }
 }

@@ -7,7 +7,6 @@ object NextPositionTests : FreeSpec({
     "left" - {
         val next = nextPosition(Point(1, 1, 1), Direction.LEFT)
 
-
         "assert" {
             next shouldBe Point(0, 1, 1)
         }
